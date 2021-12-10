@@ -10,20 +10,8 @@ package Model;
  * @author ductm
  */
 public class Student {
-    public String StudentID;
-    public String StudentName;
-    public String Email;
-    public String ClassID;
-
-    public Student() {
-    }
-
-    public Student(String StudentID, String StudentName, String Email, String ClassID) {
-        this.StudentID = StudentID;
-        this.StudentName = StudentName;
-        this.Email = Email;
-        this.ClassID = ClassID;
-    }
+    private String StudentID;
+    private String StudentName;
 
     public String getStudentID() {
         return StudentID;
@@ -41,20 +29,9 @@ public class Student {
         this.StudentName = StudentName;
     }
 
-    public String getEmail() {
-        return Email;
-    }
-
-    public void setEmail(String Email) {
-        this.Email = Email;
-    }
-
-    public String getClassID() {
-        return ClassID;
-    }
-
-    public void setClass(String ClassID) {
-        this.ClassID = ClassID;
+    @Override
+    public String toString() {
+        return "Student{" + "StudentID=" + StudentID + ", StudentName=" + StudentName + '}';
     }
     
 }

@@ -48,7 +48,9 @@ public class LoginController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String alert = (String) request.getAttribute("alert");
+        request.setAttribute("alert", alert);
+        request.getRequestDispatcher("login.jsp").forward(request, response);
     }
 
     /**
@@ -75,6 +77,17 @@ public class LoginController extends HttpServlet {
                 
                 Cookie cuser = new Cookie("username", username);
                 Cookie cpass = new Cookie("password", password);
+                cuser.setMaxAge(60);
+                cpass.setMaxAge(60);
+                response.addCookie(cuser);
+                response.addCookie(cpass);
+                response.sendRedirect("index");
+                //request.getRequestDispatcher("index.jsp").forward(request, response);
+            }
+            else {
+                String alert = "login failed!";
+                request.setAttribute("alert", alert);
+                request.getRequestDispatcher("login.jsp").forward(request, response);
             }
         }
     }

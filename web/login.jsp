@@ -10,10 +10,14 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
+        <%String alert = (String) request.getAttribute("alert");%>
     </head>
     <body>
         <form action="login" method="POST">
             <table>
+                <%if (alert != null) {%>
+                <%=alert%>
+                <%}%>
                 <tr>
                     <td>Username</td><td><input type="text" name="username" value="" /></td>
                 </tr>

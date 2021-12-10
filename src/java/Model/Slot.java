@@ -13,15 +13,8 @@ import java.sql.Time;
  */
 public class Slot {
     private int SlotID;
-    private Time Time;
-
-    public Slot() {
-    }
-
-    public Slot(int SlotID, Time Time) {
-        this.SlotID = SlotID;
-        this.Time = Time;
-    }
+    private Time Start;
+    private Time End;
 
     public int getSlotID() {
         return SlotID;
@@ -31,12 +24,25 @@ public class Slot {
         this.SlotID = SlotID;
     }
 
-    public Time getTime() {
-        return Time;
+    public Time getStart() {
+        return Start;
     }
 
-    public void setTime(Time Time) {
-        this.Time = Time;
+    public void setStart(Time Start) {
+        this.Start = Start;
+    }
+
+    public Time getEnd() {
+        return End;
+    }
+
+    public void setEnd(Time End) {
+        this.End = End;
+    }
+
+    @Override
+    public String toString() {
+        return "Slot{" + "SlotID=" + SlotID + ", Start=" + Start + ", End=" + End + '}';
     }
     
 }

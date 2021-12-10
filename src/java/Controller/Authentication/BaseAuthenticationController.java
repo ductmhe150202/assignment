@@ -66,7 +66,11 @@ public abstract class BaseAuthenticationController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         if (isAuthenticated(request)) processGet(request, response);
-        else {}
+        else {
+            String alert = "You must login first";
+            request.setAttribute("alert", alert);
+            request.getRequestDispatcher("login").forward(request, response);
+        }
     }
 
     protected abstract void processGet(HttpServletRequest request, HttpServletResponse response)
@@ -87,7 +91,11 @@ public abstract class BaseAuthenticationController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         if (isAuthenticated(request)) processPost(request,response);
-        else {}
+        else {
+            String alert = "You must login first";
+            request.setAttribute("alert", alert);
+            request.getRequestDispatcher("login").forward(request, response);
+        }
     }
 
     /**

@@ -21,6 +21,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -65,18 +66,19 @@ public class TakeAttController extends BaseAuthenticationController {
     @Override
     protected void processPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int ClassID = Integer.parseInt(request.getParameter("cid"));
-        int SlotID = Integer.parseInt(request.getParameter("slid"));
+        request.setCharacterEncoding("UTF-8");
+        Classs c = (Classs) request.getSession().getAttribute("classs");
+        int SlotID = (Integer) request.getSession().getAttribute("SlotID");
         Account account = (Account) request.getSession().getAttribute("account");
         String[] ids = request.getParameterValues("sid");
+        Date AttDate = Date.valueOf(LocalDate.now());
         ArrayList<Attendance> atts = new ArrayList<>();
         for(String id : ids) {
             Attendance att = new Attendance();
             Student s = new Student();
             s.setStudentID(id);
+            s.setStudentName(request.getParameter("sname"+id));
             att.setStudent(s);
-            Classs c = new Classs();
-            c.setClassID(ClassID);
             att.setClas(c);
             Slot sl = new Slot();
             sl.setSlotID(SlotID);
@@ -88,7 +90,9 @@ public class TakeAttController extends BaseAuthenticationController {
         }
         AttendanceDAO AttDAO = new AttendanceDAO();
         AttDAO.insert(atts);
-        response.getWriter().println("Done");
+        request.setAttribute("atts", atts);
+        request.getRequestDispatcher("listatt.jsp").forward(request, response);
+        //response.getWriter().println("Done");
     }
 
     /**

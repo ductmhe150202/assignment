@@ -41,11 +41,31 @@ public class ClassDAO {
         }
         return classes;
     }
+    
+    public Classs getClass(int ClassID) {
+        Classs c = new Classs();
+        try {
+            String sql = "select * from Class where ClassID = ?";
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, ClassID);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                c.setClassID(rs.getInt("ClassID"));
+                c.setClassName(rs.getString("ClassName"));
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(ClassDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return c;
+    }
     public static void main(String[] args) {
         ClassDAO dao = new ClassDAO();
-        ArrayList<Classs> classes = dao.getAllClass();
-        for (Classs c : classes) {
-            System.out.println(c);
-        }
+//        ArrayList<Classs> classes = dao.getAllClass();
+//        for (Classs c : classes) {
+//            System.out.println(c);
+//        }
+        Classs c = dao.getClass(1);
+        System.out.println(c);
     }
 }

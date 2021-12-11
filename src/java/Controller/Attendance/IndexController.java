@@ -65,12 +65,15 @@ public class IndexController extends BaseAuthenticationController {
             throws ServletException, IOException {
         Account account = (Account) request.getSession().getAttribute("account");
         int ClassID = Integer.parseInt(request.getParameter("ClassID"));
+        ClassDAO cldao = new ClassDAO();
+        Classs c = cldao.getClass(ClassID);
+        String ClassName = request.getParameter("ClassName");
         int SlotID = Integer.parseInt(request.getParameter("SlotID"));
         StudentDAO studao = new StudentDAO();
         ArrayList<Student> students = studao.get(ClassID, SlotID, account.getUsername());
         HttpSession session = request.getSession();
         session.setAttribute("students", students);
-        session.setAttribute("ClassID", ClassID);
+        session.setAttribute("classs", c);
         session.setAttribute("SlotID", SlotID);
         request.getRequestDispatcher("att.jsp").forward(request, response);
     }

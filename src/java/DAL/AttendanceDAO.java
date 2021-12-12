@@ -75,23 +75,67 @@ public class AttendanceDAO {
             }
         }
     }
+    
+    public ArrayList<Attendance> getAtt(int ClassID, int SlotID, Date AttDate, String Lecture) {
+        ArrayList<Attendance> atts = new ArrayList<>();
+        try {
+            String sql= "  select st.StudentID, st.StudentName, att.AttDate, att.Present from Attendance att \n" +
+                        "  inner join Student st on att.StudentID = st.StudentID\n" +
+                        "  inner join Class c on att.ClassID = c.ClassID\n" +
+                        "  where \n" +
+                        "  att.ClassID = ? \n" +
+                        "  and att.Slot = ? \n" +
+                        "  and att.AttDate = ? \n" +
+                        "  and att.Lecture = ? ";
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, ClassID);
+            ps.setInt(2, SlotID);
+            ps.setDate(3, AttDate);
+            ps.setString(4, Lecture);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Attendance att = new Attendance();
+                Student st = new Student();
+                st.setStudentID(rs.getString("StudentID"));
+                st.setStudentName(rs.getString("StudentName"));
+                att.setStudent(st);
+                att.setAttDate(rs.getDate("AttDate"));
+                att.setPresent(rs.getBoolean("Present"));
+                atts.add(att);
+                
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(AttendanceDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return atts;
+    }
+    
     public static void main(String[] args) {
         ArrayList<Attendance> atts = new ArrayList<>();
-        Attendance att = new Attendance();
-        Student s = new Student();
-        s.setStudentID("HE130064");
-        att.setStudent(s);
-        Classs c = new Classs();
-        c.setClassID(1);
-        att.setClas(c);
-        Slot sl = new Slot();
-        sl.setSlotID(2);
-        att.setSlot(sl);
-        att.setLecture("ductm");
-        att.setAttDate(Date.valueOf(LocalDate.now()));
-        att.setPresent(true);
-        atts.add(att);
+//        Attendance att = new Attendance();
+//        Student s = new Student();
+//        s.setStudentID("HE130064");
+//        att.setStudent(s);
+//        Classs c = new Classs();
+//        c.setClassID(1);
+//        att.setClas(c);
+//        Slot sl = new Slot();
+//        sl.setSlotID(2);
+//        att.setSlot(sl);
+//        att.setLecture("ductm");
+//        att.setAttDate(Date.valueOf(LocalDate.now()));
+//        att.setPresent(true);
+//        //atts.add(att);
         AttendanceDAO attdao = new AttendanceDAO();
-        attdao.insert(atts);
+        //attdao.insert(atts);
+        atts = attdao.getAtt(1, 2, Date.valueOf(LocalDate.now()) , "ductm");
+        for(Attendance at : atts) {
+            System.out.println(at.getStudent().getStudentID());
+            System.out.println(at.getStudent().getStudentName());
+            System.out.println(at.getAttDate());
+            System.out.println(at.isPresent());
+            System.out.println("");
+        }
     }
 }

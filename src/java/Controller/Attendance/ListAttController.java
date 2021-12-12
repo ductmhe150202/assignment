@@ -6,8 +6,15 @@
 package Controller.Attendance;
 
 import Controller.Authentication.BaseAuthenticationController;
+import DAL.AttendanceDAO;
+import Model.Account;
+import Model.Attendance;
+import Model.Classs;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +49,14 @@ public class ListAttController extends BaseAuthenticationController {
     @Override
     protected void processGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+        Classs c = (Classs) request.getSession().getAttribute("classs");
+        int SlotID = (Integer) request.getSession().getAttribute("SlotID");
+        Account account = (Account) request.getSession().getAttribute("account");
+        Date AttDate = Date.valueOf(LocalDate.now());
+        AttendanceDAO attdao = new AttendanceDAO();
+        ArrayList<Attendance> atts = attdao.getAtt(c.getClassID(), SlotID, AttDate, account.getUsername());
+        request.setAttribute("atts", atts);
+        request.getRequestDispatcher("listatt.jsp").forward(request, response);
     }
 
     /**

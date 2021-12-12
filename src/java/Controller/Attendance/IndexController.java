@@ -6,6 +6,7 @@
 package Controller.Attendance;
 
 import Controller.Authentication.BaseAuthenticationController;
+import DAL.AttendanceDAO;
 import DAL.ClassDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -16,9 +17,12 @@ import javax.servlet.http.HttpServletResponse;
 import DAL.SlotDAO;
 import DAL.StudentDAO;
 import Model.Account;
+import Model.Attendance;
 import Model.Classs;
 import Model.Slot;
 import Model.Student;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import javax.servlet.http.HttpSession;
 
@@ -67,8 +71,14 @@ public class IndexController extends BaseAuthenticationController {
         int ClassID = Integer.parseInt(request.getParameter("ClassID"));
         ClassDAO cldao = new ClassDAO();
         Classs c = cldao.getClass(ClassID);
-        String ClassName = request.getParameter("ClassName");
         int SlotID = Integer.parseInt(request.getParameter("SlotID"));
+        AttendanceDAO attdao = new AttendanceDAO();
+        ArrayList<Attendance> atts = attdao.getAtt(ClassID, SlotID, Date.valueOf(LocalDate.now()), account.getUsername());
+        if (atts.isEmpty() != true) {
+            String alert = "This class has been attended.";
+            request.setAttribute("alert", alert);
+            request.getRequestDispatcher("index.jsp").forward(request, response);
+        }
         StudentDAO studao = new StudentDAO();
         ArrayList<Student> students = studao.get(ClassID, SlotID, account.getUsername());
         HttpSession session = request.getSession();

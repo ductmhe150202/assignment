@@ -68,6 +68,7 @@ public class LoginController extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             String username = request.getParameter("username");
             String password = request.getParameter("password");
+            String remember = request.getParameter("remember");
             
             AccountDAO acc = new AccountDAO();
             Account account = acc.get(username, password);
@@ -75,12 +76,14 @@ public class LoginController extends HttpServlet {
                 HttpSession session = request.getSession();
                 session.setAttribute("account", account);
                 
+                if (remember != null) {
                 Cookie cuser = new Cookie("username", username);
                 Cookie cpass = new Cookie("password", password);
-                cuser.setMaxAge(60);
-                cpass.setMaxAge(60);
+                cuser.setMaxAge(300);
+                cpass.setMaxAge(300);
                 response.addCookie(cuser);
                 response.addCookie(cpass);
+            }
                 response.sendRedirect("index");
                 //request.getRequestDispatcher("index.jsp").forward(request, response);
             }

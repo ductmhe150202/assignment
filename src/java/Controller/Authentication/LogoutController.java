@@ -8,6 +8,7 @@ package Controller.Authentication;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,6 +31,16 @@ public class LogoutController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.getSession().setAttribute("account", null);
+        Cookie cuser = new Cookie("username", null);
+        Cookie cpass = new Cookie("password", null);
+        cuser.setMaxAge(3600);
+        cpass.setMaxAge(3600);
+        response.addCookie(cuser);
+        response.addCookie(cpass);
+//        Cookie[] cookies = request.getCookies();
+//        for( Cookie c : cookies) {
+//            c.setMaxAge(-1);
+//        }
         request.getRequestDispatcher("login.jsp").forward(request, response);
     }
 

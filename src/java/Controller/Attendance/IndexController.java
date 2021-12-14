@@ -53,7 +53,7 @@ public class IndexController extends BaseAuthenticationController {
         HttpSession session = request.getSession();
         session.setAttribute("classes", classes);
         session.setAttribute("slots", slots);
-        request.getRequestDispatcher("index.jsp").forward(request, response);
+        request.getRequestDispatcher("home.jsp").forward(request, response);
     }
 
     /**
@@ -77,10 +77,15 @@ public class IndexController extends BaseAuthenticationController {
         if (atts.isEmpty() != true) {
             String alert = "This class has been attended.";
             request.setAttribute("alert", alert);
-            request.getRequestDispatcher("index.jsp").forward(request, response);
+            request.getRequestDispatcher("home.jsp").forward(request, response);
         }
         StudentDAO studao = new StudentDAO();
         ArrayList<Student> students = studao.get(ClassID, SlotID, account.getUsername());
+        if (students.isEmpty() == true) {
+            String alert = "You don't have class at slot " + SlotID;
+            request.setAttribute("alert", alert);
+            request.getRequestDispatcher("home.jsp").forward(request, response);
+        }
         HttpSession session = request.getSession();
         session.setAttribute("students", students);
         session.setAttribute("classs", c);

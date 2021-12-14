@@ -78,10 +78,42 @@ public class AttendanceDAO {
         }
     }
     
+    public void update(ArrayList<Attendance> atts) {
+        try {
+            conn = new DBContext().getConnection();
+            conn.setAutoCommit(false);
+            String sql = "  update Attendance set Present = ? \n" +
+                         "  where AttID = ?";
+            for(Attendance att : atts) {
+                ps = conn.prepareStatement(sql);
+                ps.setBoolean(1, att.isPresent());
+                ps.setInt(2, att.getAttID());
+                ps.executeUpdate();
+            }
+            conn.commit();
+        } catch (Exception ex) {
+            Logger.getLogger(AttendanceDAO.class.getName()).log(Level.SEVERE, null, ex);
+            try {
+                conn = new DBContext().getConnection();
+                conn.rollback();
+            } catch (Exception ex1) {
+                Logger.getLogger(AttendanceDAO.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        }
+        finally {
+            try {
+                conn = new DBContext().getConnection();
+                conn.setAutoCommit(true);
+            } catch (Exception ex1) {
+                Logger.getLogger(AttendanceDAO.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        }
+    }
+    
     public ArrayList<Attendance> getAtt(int ClassID, int SlotID, Date AttDate, String Lecture) {
         ArrayList<Attendance> atts = new ArrayList<>();
         try {
-            String sql= "  select st.StudentID, st.StudentName, att.AttDate, att.Present from Attendance att \n" +
+            String sql= "  select att.AttID, st.StudentID, st.StudentName, c.ClassID, c.ClassName, att.Slot, att.AttDate, att.Present from Attendance att \n" +
                         "  inner join Student st on att.StudentID = st.StudentID\n" +
                         "  inner join Class c on att.ClassID = c.ClassID\n" +
                         "  where \n" +
@@ -98,10 +130,18 @@ public class AttendanceDAO {
             rs = ps.executeQuery();
             while (rs.next()) {
                 Attendance att = new Attendance();
+                att.setAttID(rs.getInt("AttID"));
                 Student st = new Student();
                 st.setStudentID(rs.getString("StudentID"));
                 st.setStudentName(rs.getString("StudentName"));
                 att.setStudent(st);
+                Classs c = new Classs();
+                c.setClassID(rs.getInt("ClassID"));
+                c.setClassName(rs.getString("ClassName"));
+                att.setClas(c);
+                Slot s = new Slot();
+                s.setSlotID(rs.getInt("Slot"));
+                att.setSlot(s);
                 att.setAttDate(rs.getDate("AttDate"));
                 att.setPresent(rs.getBoolean("Present"));
                 atts.add(att);
@@ -115,7 +155,7 @@ public class AttendanceDAO {
     public ArrayList<Attendance> search (int ClassID, int SlotID, Date AttDate, String Lecture){
         ArrayList<Attendance> atts =  new ArrayList<>();
         try {
-            String sql = "  select st.StudentID, st.StudentName, att.AttDate, att.Present from Attendance att \n" +
+            String sql = "  select st.StudentID, st.StudentName, c.ClassID, c.ClassName, att.Slot, att.AttDate, att.Present from Attendance att \n" +
                         "  inner join Student st on att.StudentID = st.StudentID\n" +
                         "  inner join Class c on att.ClassID = c.ClassID\n" +
                         "  where att.Lecture = ? \n";
@@ -166,6 +206,13 @@ public class AttendanceDAO {
                 st.setStudentID(rs.getString("StudentID"));
                 st.setStudentName(rs.getString("StudentName"));
                 att.setStudent(st);
+                Classs c = new Classs();
+                c.setClassID(rs.getInt("ClassID"));
+                c.setClassName(rs.getString("ClassName"));
+                att.setClas(c);
+                Slot s = new Slot();
+                s.setSlotID(rs.getInt("Slot"));
+                att.setSlot(s);
                 att.setAttDate(rs.getDate("AttDate"));
                 att.setPresent(rs.getBoolean("Present"));
                 atts.add(att);
@@ -178,6 +225,8 @@ public class AttendanceDAO {
     
     public static void main(String[] args) {
         ArrayList<Attendance> atts = new ArrayList<>();
+        ArrayList<Attendance> attss = new ArrayList<>();
+        
 //        Attendance att = new Attendance();
 //        Student s = new Student();
 //        s.setStudentID("HE130064");
@@ -194,8 +243,30 @@ public class AttendanceDAO {
 //        //atts.add(att);
         AttendanceDAO attdao = new AttendanceDAO();
         //attdao.insert(atts);
-        atts = attdao.search(-1, -1, Date.valueOf(LocalDate.now()) , "ductm");
+//        atts = attdao.search(1, 2, Date.valueOf(LocalDate.now()) , "ductm");
+//        for(Attendance at : atts) {
+//            System.out.println(at.getStudent().getStudentID());
+//            System.out.println(at.getStudent().getStudentName());
+//            System.out.println(at.getClas().getClassName());
+//            System.out.println(at.getSlot().getSlotID());
+//            System.out.println(at.getAttDate());
+//            System.out.println(at.isPresent());
+//            System.out.println("");
+//        }
+        for (int i = 146; i<=151; i++) {
+            Attendance att = new Attendance();
+            att.setAttID(i);
+            att.setPresent(false);
+            attss.add(att);
+        }
+//        for(Attendance at : attss) {
+//            System.out.println(at.getAttID());
+//            System.out.println(at.isPresent());
+//        }
+        attdao.update(attss);
+        atts = attdao.getAtt(1, 2, Date.valueOf("2021-12-14"), "ductm");
         for(Attendance at : atts) {
+            System.out.println(at.getAttID());
             System.out.println(at.getStudent().getStudentID());
             System.out.println(at.getStudent().getStudentName());
             System.out.println(at.getAttDate());

@@ -41,7 +41,7 @@ public class LogoutController extends HttpServlet {
 //        for( Cookie c : cookies) {
 //            c.setMaxAge(-1);
 //        }
-        request.getRequestDispatcher("login.jsp").forward(request, response);
+        request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

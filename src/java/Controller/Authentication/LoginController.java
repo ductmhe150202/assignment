@@ -50,7 +50,7 @@ public class LoginController extends HttpServlet {
             throws ServletException, IOException {
         String alert = (String) request.getAttribute("alert");
         request.setAttribute("alert", alert);
-        request.getRequestDispatcher("login.jsp").forward(request, response);
+        request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 
     /**
@@ -90,7 +90,7 @@ public class LoginController extends HttpServlet {
             else {
                 String alert = "login failed!";
                 request.setAttribute("alert", alert);
-                request.getRequestDispatcher("login.jsp").forward(request, response);
+                request.getRequestDispatcher("index.jsp").forward(request, response);
             }
         }
     }

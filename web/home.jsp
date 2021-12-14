@@ -1,26 +1,20 @@
 <%-- 
-    Document   : att
-    Created on : Dec 11, 2021, 2:38:38 AM
+    Document   : index
+    Created on : Dec 8, 2021, 11:14:27 PM
     Author     : ductm
 --%>
-        
-
-<%@page import="Model.Account"%>
-<%@page import="Model.Classs"%>
-<%@page import="Model.Slot"%>
-<%@page import="java.util.ArrayList"%>
-<%@page import="Model.Student"%>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-
         <%
             Account account = (Account) request.getSession().getAttribute("account");
-            ArrayList<Student> students = (ArrayList<Student>) request.getSession().getAttribute("students");
-            Classs cl = (Classs) request.getSession().getAttribute("classs");
-            int SlotID = (Integer) request.getSession().getAttribute("SlotID");
             ArrayList<Classs> classes = (ArrayList<Classs>) request.getSession().getAttribute("classes");
             ArrayList<Slot> slots = (ArrayList<Slot>) request.getSession().getAttribute("slots");
+            String alert = (String) request.getAttribute("alert");
         %>
-<!DOCTYPE html>
+<%@page import="Model.Slot"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="Model.Classs"%>
+<%@page import="Model.Account"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!--<!DOCTYPE html>-->
 <!--<html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -28,35 +22,41 @@
         
     </head>
     <body>
-        <form action="att" method="POST">
-            Class: <%=cl.getClassName()%>
-            Slot : <%=SlotID%>
-        <table border="1px">
-            <tr>
-                <td>Student ID</td>
-                <td>Student Name</td>
-                <td>Present</td>
-            </tr>
-            <%for(Student s : students) {%>
-            <tr>
-                <td><%=s.getStudentID()%><input type="hidden" name="sid" value="<%=s.getStudentID()%>" /></td>
-                <td><%=s.getStudentName()%><input type="hidden" name="sname<%=s.getStudentID()%>" value="<%=s.getStudentName()%>" /></td>
-                <td><input type="checkbox" name="present<%=s.getStudentID()%>" value="present" /></td>
-            </tr>
-            <%}%>
-        </table>
-        <input type="submit" value="Save" />
+        <form action="index" method="POST">
+            <table>
+                <tr>
+                    <td>Class: </td>
+                    <td>
+                        <select name="ClassID">
+                            <%for (Classs c : classes) {%>
+                            <option value="<%=c.getClassID()%>"><%=c.getClassName()%></option>
+                            <%}%>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Slot: </td>
+                    <td>
+                        <select name="SlotID">
+                            <%for (Slot s : slots) {%>
+                            <option value="<%=s.getSlotID()%>"><%=s.getSlotID()%></option>
+                            <%}%>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+                <input type="submit" value="Take Attendance" />
         </form>
     </body>
 </html>-->
-            
+                            
 <!--A Design by W3layouts
 Author: W3layout
 Author URL: http://w3layouts.com
 License: Creative Commons Attribution 3.0 Unported
 License URL: http://creativecommons.org/licenses/by/3.0/
 -->
-
+<!DOCTYPE html>
 <head>
 <title>Visitors an Admin Panel Category Bootstrap Responsive Website Template | Responsive_table :: w3layouts</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -153,6 +153,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
     </div>
      
     <div>
+        <form action="index" method="POST">
       <table class="table" ui-jq="footable" ui-options='{
         "paging": {
           "enabled": true
@@ -165,119 +166,28 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
         }}'>
         <thead>
           <tr>
-<!--            <th data-breakpoints="xs">ID</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th data-breakpoints="xs">Job Title</th>
-           
-            <th data-breakpoints="xs sm md" data-title="DOB">Date of Birth</th>-->
             <th>Class</th>
             <th>
-                <%=cl.getClassName()%>
+            <select name="ClassID">
+                            <option>-----Choose-----</option>
+                            <%for (Classs c : classes) {%>
+                            <option value="<%=c.getClassID()%>"><%=c.getClassName()%></option>
+                            <%}%>
+                        </select>
             </th>
             <th>Slot</th>
-            <th><%=SlotID%></th>
+            <th><select name="SlotID">
+                            <option>-----Choose-----</option>
+                            <%for (Slot s : slots) {%>
+                            <option value="<%=s.getSlotID()%>"><%=s.getSlotID()%></option>
+                            <%}%>
+                        </select></th>
           </tr>
         </thead>
-<!--        <tbody>
-          <tr data-expanded="true">
-            <td>1</td>
-            <td>Dennise</td>
-            <td>Fuhrman</td>
-            <td>High School History Teacher</td>
-            
-            <td>July 25th 1960</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>Elodia</td>
-            <td>Weisz</td>
-            <td>Wallpaperer Helper</td>
-          
-            <td>March 30th 1982</td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>Raeann</td>
-            <td>Haner</td>
-            <td>Internal Medicine Nurse Practitioner</td>
-           
-            <td>February 26th 1966</td>
-          </tr>
-          <tr>
-            <td>4</td>
-            <td>Junie</td>
-            <td>Landa</td>
-            <td>Offbearer</td>
-           
-            <td>March 29th 1966</td>
-          </tr>
-          <tr>
-            <td>5</td>
-            <td>Solomon</td>
-            <td>Bittinger</td>
-            <td>Roller Skater</td>
-           
-            <td>September 22nd 1964</td>
-          </tr>
-          <tr>
-            <td>6</td>
-            <td>Bar</td>
-            <td>Lewis</td>
-            <td>Clown</td>
-           
-            <td>August 4th 1991</td>
-          </tr>
-          <tr>
-            <td>7</td>
-            <td>Usha</td>
-            <td>Leak</td>
-            <td>Ships Electronic Warfare Officer</td>
-          
-            <td>November 20th 1979</td>
-          </tr>
-          <tr>
-            <td>8</td>
-            <td>Lorriane</td>
-            <td>Cooke</td>
-            <td>Technical Services Librarian</td>
-           
-            <td>April 7th 1969</td>
-          </tr>
-        </tbody>-->
       </table>
-        
-        <form action="att" method="POST">
-        <table class="table" ui-jq="footable" ui-options='{
-        "paging": {
-          "enabled": true
-        },
-        "filtering": {
-          "enabled": true
-        },
-        "sorting": {
-          "enabled": true
-        }}'>
-            <thead>
-            <tr>
-                <th>Student ID</th>
-                <th>Student Name</th>
-                <th>Present</th>
-            </tr>
-            </thead>
-            
-            <%for(Student s : students) {%>
-            <tbody>
-            <tr>
-                <td><%=s.getStudentID()%><input type="hidden" name="sid" value="<%=s.getStudentID()%>" /></td>
-                <td><%=s.getStudentName()%><input type="hidden" name="sname<%=s.getStudentID()%>" value="<%=s.getStudentName()%>" /></td>
-                <td><input type="checkbox" name="present<%=s.getStudentID()%>" value="present" /></td>
-            </tr>
-            </tbody>
-            <%}%>
-            
-        </table>
-        <input class="button" type="submit" value="Save" />
+        <%if (alert != null) {%>
+        <p style="color: red; margin: 10px"><%=alert%></p><%}%>
+        <input class="button" type="submit" value="Take Attendance" />      
         </form>
     </div>
   </div>
@@ -303,3 +213,4 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <script src="js/jquery.scrollTo.js"></script>
 </body>
 </html>
+

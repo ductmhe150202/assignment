@@ -1,60 +1,28 @@
 <%-- 
-    Document   : listatt
-    Created on : Dec 11, 2021, 10:18:06 PM
+    Document   : search
+    Created on : Dec 14, 2021, 4:44:29 PM
     Author     : ductm
 --%>
 
+<%@page import="java.sql.Date"%>
         <%
-          ArrayList<Attendance> atts = (ArrayList<Attendance>) request.getAttribute("atts");
-          Classs cl = (Classs) request.getSession().getAttribute("classs");
-          int SlotID = (Integer) request.getSession().getAttribute("SlotID");
-          Account account = (Account) request.getSession().getAttribute("account");
+            Account account = (Account) request.getSession().getAttribute("account");
+            ArrayList<Classs> classes = (ArrayList<Classs>) request.getSession().getAttribute("classes");
+            ArrayList<Slot> slots = (ArrayList<Slot>) request.getSession().getAttribute("slots");
+            String alert = (String) request.getAttribute("alert");
+            ArrayList<Attendance> atts = (ArrayList<Attendance>) request.getAttribute("atts");
+            int ClassID = (Integer) request.getAttribute("ClassID");
+            int SlotID = (Integer) request.getAttribute("SlotID");
+            Date AttDate = (Date) request.getAttribute("AttDate");
         %>
-<%@page import="Model.Account"%>
 <%@page import="Model.Attendance"%>
-<%@page import="Model.Classs"%>
+<%@page import="Model.Slot"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="Model.Student"%>
-<%@page language="java" pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" %>
-<!--<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-        <title>JSP Page</title>
-       
-    </head>
-    <body>
-        <form action="att" method="POST">
-            Class: <%=cl.getClassName()%> 
-            Slot : <%=SlotID%>
-        <table border="1px">
-            <tr>
-                <td>Student ID</td>
-                <td>Student Name</td>
-                <td>Attendance Date</td>
-                <td>Present</td>
-            </tr>
-            <%for(Attendance att : atts) {%>
-            <tr>
-                <td><%=att.getStudent().getStudentID()%></td>
-                <td><%=att.getStudent().getStudentName()%></td>
-                <td><%=att.getAttDate()%></td>
-                <td><input disabled type="checkbox" name="present<%=att.getStudent().getStudentID()%>" value="present" <%=att.isPresent()? "checked":""%> /></td>
-            </tr>
-            <%}%>
-        </table>
-        <input type="submit" value="Save" />
-        </form>
-    </body>
-</html>-->
-            
-<!--A Design by W3layouts
-Author: W3layout
-Author URL: http://w3layouts.com
-License: Creative Commons Attribution 3.0 Unported
-License URL: http://creativecommons.org/licenses/by/3.0/
--->
+<%@page import="Model.Classs"%>
+<%@page import="Model.Account"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 
+<!DOCTYPE html>
 <head>
 <title>Visitors an Admin Panel Category Bootstrap Responsive Website Template | Responsive_table :: w3layouts</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -147,10 +115,11 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 		<div class="table-agile-info">
  <div class="panel panel-default">
     <div class="panel-heading">
-     Attendance
+     Search Attendance
     </div>
      
     <div>
+        <form action="search" method="POST">
       <table class="table" ui-jq="footable" ui-options='{
         "paging": {
           "enabled": true
@@ -163,18 +132,42 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
         }}'>
         <thead>
           <tr>
-
             <th>Class</th>
             <th>
-                <%=cl.getClassName()%>
+            <select name="ClassID">
+                <option value="0">-----Choose-----</option>
+                            <%for (Classs c : classes) {%>
+                            <option value="<%=c.getClassID()%>"><%=c.getClassName()%></option>
+                            <%}%>
+                        </select>
             </th>
             <th>Slot</th>
-            <th><%=SlotID%></th>
+            <th><select name="SlotID">
+                    <option value="0">-----Choose-----</option>
+                            <%for (Slot s : slots) {%>
+                            <option value="<%=s.getSlotID()%>"><%=s.getSlotID()%></option>
+                            <%}%>
+                        </select></th>
+          <th>Attended Date</th>
+          <th><input type="date" name="AttDate" value="" required="required"/></th>
           </tr>
+          
         </thead>
       </table>
-          
-        <table class="table" ui-jq="footable" ui-options='{
+        <%if (alert != null) {%>
+        <p style="color: red; margin: 10px"><%=alert%></p><%}%>
+        <input class="button" type="submit" value="View Attendance" />      
+        </form>
+    </div>
+        
+  </div>
+  
+</div>
+        <% if (atts != null) {%>
+        <div class="table-agile-info">
+            <div class="panel panel-default">
+        <div>
+            <table class="table" ui-jq="footable" ui-options='{
         "paging": {
           "enabled": true
         },
@@ -183,31 +176,41 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
         },
         "sorting": {
           "enabled": true
-        }}'>
-            <thead>
-            <tr>
-                <th>Student ID</th>
-                <th>Student Name</th>
-                <th>Attendance Date</th>
-                <th>Status</th>
-            </tr>
-            </thead>
-            
-            <%for(Attendance att : atts) {%>
-            <tbody>
-            <tr>
-                <td><%=att.getStudent().getStudentID()%></td>
-                <td><%=att.getStudent().getStudentName()%></td>
-                <td><%=att.getAttDate()%></td>
-                <td><%=att.isPresent()? "Present":"Absent"%></td>
-            </tr>
-            </tbody>
-            <%}%>
-            
-        </table>
-    </div>
-  </div>
-</div>
+          }}'>
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Student Name</th>
+                        <th>Class</th>
+                        <th>Slot</th>
+                        <th>Attend Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for (Attendance att : atts) {%>
+                    <tr>
+                        <th><%=att.getStudent().getStudentID()%></th>
+                        <th><%=att.getStudent().getStudentName()%></th>
+                        <th><%=att.getClas().getClassID() %></th>
+                        <th><%=att.getSlot().getSlotID()%></th>
+                        <th><%=att.getAttDate()%></th>
+                        <th><%=att.isPresent()? "Present":"Absent"%></th>
+                    </tr>
+                    <%}%>
+                </tbody>
+            </table>
+                
+                <form action="update" method="GET">
+                        <input type="hidden" name="ClassID" value="<%=ClassID%>" />
+                        <input type="hidden" name="SlotID" value="<%=SlotID%>" />
+                        <input type="hidden" name="AttDate" value="<%=AttDate%>" />
+                    <input class="button" type="submit" value="Edit Attendance" />
+                </form>
+        </div>
+                </div>
+                </div>
+        <%}%>
 </section>
  <!-- footer -->
 		  <div class="footer">

@@ -1,53 +1,25 @@
 <%-- 
-    Document   : listatt
-    Created on : Dec 11, 2021, 10:18:06 PM
+    Document   : att
+    Created on : Dec 11, 2021, 2:38:38 AM
     Author     : ductm
 --%>
+        
 
-        <%
-          ArrayList<Attendance> atts = (ArrayList<Attendance>) request.getAttribute("atts");
-          Classs cl = (Classs) request.getSession().getAttribute("classs");
-          int SlotID = (Integer) request.getSession().getAttribute("SlotID");
-          Account account = (Account) request.getSession().getAttribute("account");
-        %>
-<%@page import="Model.Account"%>
 <%@page import="Model.Attendance"%>
+<%@page import="Model.Account"%>
 <%@page import="Model.Classs"%>
+<%@page import="Model.Slot"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="Model.Student"%>
-<%@page language="java" pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" %>
-<!--<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-        <title>JSP Page</title>
-       
-    </head>
-    <body>
-        <form action="att" method="POST">
-            Class: <%=cl.getClassName()%> 
-            Slot : <%=SlotID%>
-        <table border="1px">
-            <tr>
-                <td>Student ID</td>
-                <td>Student Name</td>
-                <td>Attendance Date</td>
-                <td>Present</td>
-            </tr>
-            <%for(Attendance att : atts) {%>
-            <tr>
-                <td><%=att.getStudent().getStudentID()%></td>
-                <td><%=att.getStudent().getStudentName()%></td>
-                <td><%=att.getAttDate()%></td>
-                <td><input disabled type="checkbox" name="present<%=att.getStudent().getStudentID()%>" value="present" <%=att.isPresent()? "checked":""%> /></td>
-            </tr>
-            <%}%>
-        </table>
-        <input type="submit" value="Save" />
-        </form>
-    </body>
-</html>-->
-            
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+
+        <%
+            Account account = (Account) request.getSession().getAttribute("account");
+            ArrayList<Attendance> atts = (ArrayList<Attendance>) request.getSession().getAttribute("atts");
+            Classs cl = (Classs) request.getSession().getAttribute("classs");
+            int SlotID = (Integer) request.getSession().getAttribute("SlotID");
+        %>
+    
 <!--A Design by W3layouts
 Author: W3layout
 Author URL: http://w3layouts.com
@@ -163,7 +135,12 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
         }}'>
         <thead>
           <tr>
-
+<!--            <th data-breakpoints="xs">ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th data-breakpoints="xs">Job Title</th>
+           
+            <th data-breakpoints="xs sm md" data-title="DOB">Date of Birth</th>-->
             <th>Class</th>
             <th>
                 <%=cl.getClassName()%>
@@ -172,8 +149,75 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
             <th><%=SlotID%></th>
           </tr>
         </thead>
-      </table>
+<!--        <tbody>
+          <tr data-expanded="true">
+            <td>1</td>
+            <td>Dennise</td>
+            <td>Fuhrman</td>
+            <td>High School History Teacher</td>
+            
+            <td>July 25th 1960</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Elodia</td>
+            <td>Weisz</td>
+            <td>Wallpaperer Helper</td>
           
+            <td>March 30th 1982</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Raeann</td>
+            <td>Haner</td>
+            <td>Internal Medicine Nurse Practitioner</td>
+           
+            <td>February 26th 1966</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Junie</td>
+            <td>Landa</td>
+            <td>Offbearer</td>
+           
+            <td>March 29th 1966</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>Solomon</td>
+            <td>Bittinger</td>
+            <td>Roller Skater</td>
+           
+            <td>September 22nd 1964</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>Bar</td>
+            <td>Lewis</td>
+            <td>Clown</td>
+           
+            <td>August 4th 1991</td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>Usha</td>
+            <td>Leak</td>
+            <td>Ships Electronic Warfare Officer</td>
+          
+            <td>November 20th 1979</td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>Lorriane</td>
+            <td>Cooke</td>
+            <td>Technical Services Librarian</td>
+           
+            <td>April 7th 1969</td>
+          </tr>
+        </tbody>-->
+      </table>
+        
+        <form action="update" method="POST">
         <table class="table" ui-jq="footable" ui-options='{
         "paging": {
           "enabled": true
@@ -188,23 +232,23 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
             <tr>
                 <th>Student ID</th>
                 <th>Student Name</th>
-                <th>Attendance Date</th>
-                <th>Status</th>
+                <th>Present</th>
             </tr>
             </thead>
             
             <%for(Attendance att : atts) {%>
             <tbody>
             <tr>
-                <td><%=att.getStudent().getStudentID()%></td>
+                <td><%=att.getStudent().getStudentID() %><input type="hidden" name="AttID" value="<%=att.getAttID() %>" /></td>
                 <td><%=att.getStudent().getStudentName()%></td>
-                <td><%=att.getAttDate()%></td>
-                <td><%=att.isPresent()? "Present":"Absent"%></td>
+                <td><input type="checkbox" name="present<%=att.getAttID()%>" value="present" <%=att.isPresent()? "checked":""%>/></td>
             </tr>
             </tbody>
             <%}%>
             
         </table>
+        <input class="button" type="submit" value="Save" />
+        </form>
     </div>
   </div>
 </div>

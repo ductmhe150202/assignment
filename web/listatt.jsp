@@ -16,37 +16,7 @@
 <%@page import="java.util.ArrayList"%>
 <%@page import="Model.Student"%>
 <%@page language="java" pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" %>
-<!--<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-        <title>JSP Page</title>
-       
-    </head>
-    <body>
-        <form action="att" method="POST">
-            Class: <%=cl.getClassName()%> 
-            Slot : <%=SlotID%>
-        <table border="1px">
-            <tr>
-                <td>Student ID</td>
-                <td>Student Name</td>
-                <td>Attendance Date</td>
-                <td>Present</td>
-            </tr>
-            <%for(Attendance att : atts) {%>
-            <tr>
-                <td><%=att.getStudent().getStudentID()%></td>
-                <td><%=att.getStudent().getStudentName()%></td>
-                <td><%=att.getAttDate()%></td>
-                <td><input disabled type="checkbox" name="present<%=att.getStudent().getStudentID()%>" value="present" <%=att.isPresent()? "checked":""%> /></td>
-            </tr>
-            <%}%>
-        </table>
-        <input type="submit" value="Save" />
-        </form>
-    </body>
-</html>-->
+
             
 <!--A Design by W3layouts
 Author: W3layout
@@ -56,7 +26,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 -->
 
 <head>
-<title>Visitors an Admin Panel Category Bootstrap Responsive Website Template | Responsive_table :: w3layouts</title>
+<title>Ei - View Attendance</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="keywords" content="Visitors Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, 

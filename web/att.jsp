@@ -20,45 +20,9 @@
             ArrayList<Classs> classes = (ArrayList<Classs>) request.getSession().getAttribute("classes");
             ArrayList<Slot> slots = (ArrayList<Slot>) request.getSession().getAttribute("slots");
         %>
-<!DOCTYPE html>
-<!--<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-        
-    </head>
-    <body>
-        <form action="att" method="POST">
-            Class: <%=cl.getClassName()%>
-            Slot : <%=SlotID%>
-        <table border="1px">
-            <tr>
-                <td>Student ID</td>
-                <td>Student Name</td>
-                <td>Present</td>
-            </tr>
-            <%for(Student s : students) {%>
-            <tr>
-                <td><%=s.getStudentID()%><input type="hidden" name="sid" value="<%=s.getStudentID()%>" /></td>
-                <td><%=s.getStudentName()%><input type="hidden" name="sname<%=s.getStudentID()%>" value="<%=s.getStudentName()%>" /></td>
-                <td><input type="checkbox" name="present<%=s.getStudentID()%>" value="present" /></td>
-            </tr>
-            <%}%>
-        </table>
-        <input type="submit" value="Save" />
-        </form>
-    </body>
-</html>-->
-            
-<!--A Design by W3layouts
-Author: W3layout
-Author URL: http://w3layouts.com
-License: Creative Commons Attribution 3.0 Unported
-License URL: http://creativecommons.org/licenses/by/3.0/
--->
 
 <head>
-<title>Visitors an Admin Panel Category Bootstrap Responsive Website Template | Responsive_table :: w3layouts</title>
+<title>Ei - Take Attendance</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="keywords" content="Visitors Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, 

@@ -16,6 +16,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -103,7 +105,70 @@ public class AttendanceDAO {
                 att.setAttDate(rs.getDate("AttDate"));
                 att.setPresent(rs.getBoolean("Present"));
                 atts.add(att);
-                
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(AttendanceDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return atts;
+    }
+    
+    public ArrayList<Attendance> search (int ClassID, int SlotID, Date AttDate, String Lecture){
+        ArrayList<Attendance> atts =  new ArrayList<>();
+        try {
+            String sql = "  select st.StudentID, st.StudentName, att.AttDate, att.Present from Attendance att \n" +
+                        "  inner join Student st on att.StudentID = st.StudentID\n" +
+                        "  inner join Class c on att.ClassID = c.ClassID\n" +
+                        "  where att.Lecture = ? \n";
+            
+            int indexParam = 1;
+            HashMap<Integer, Object[]> parameters = new HashMap<>();
+            if (ClassID != -1) {
+                sql += "  and att.ClassID = ? \n";
+                indexParam++;
+                Object[] params = new Object[2];
+                params[0] = Integer.class.getTypeName();
+                params[1] = ClassID;
+                parameters.put(indexParam, params);
+            }
+            
+            if (SlotID != -1) {
+                sql += "  and att.Slot = ? \n";
+                indexParam++;
+                Object[] params = new Object[2];
+                params[0] = Integer.class.getTypeName();
+                params[1] = SlotID;
+                parameters.put(indexParam, params);
+            }
+            
+            if (AttDate.toString().length() > 0) {
+                sql += "  and att.AttDate = ? \n";
+                indexParam++;
+                Object[] params = new Object[2];
+                params[0] = Date.class.getTypeName();
+                params[1] = AttDate;
+                parameters.put(indexParam, params);
+            }
+            
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, Lecture);
+            for (Map.Entry<Integer, Object[]> entry : parameters.entrySet()) {
+                Integer index = entry.getKey();
+                Object[] params = entry.getValue();
+                String type = params[0].toString();
+                if (type.equals(Integer.class.getTypeName())) ps.setInt(index, (Integer)params[1]);
+                else if (type.equals(Date.class.getTypeName())) ps.setDate(index, (Date)params[1]);
+            }
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Attendance att = new Attendance();
+                Student st = new Student();
+                st.setStudentID(rs.getString("StudentID"));
+                st.setStudentName(rs.getString("StudentName"));
+                att.setStudent(st);
+                att.setAttDate(rs.getDate("AttDate"));
+                att.setPresent(rs.getBoolean("Present"));
+                atts.add(att);
             }
         } catch (Exception ex) {
             Logger.getLogger(AttendanceDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -129,7 +194,7 @@ public class AttendanceDAO {
 //        //atts.add(att);
         AttendanceDAO attdao = new AttendanceDAO();
         //attdao.insert(atts);
-        atts = attdao.getAtt(1, 2, Date.valueOf(LocalDate.now()) , "ductm");
+        atts = attdao.search(-1, -1, Date.valueOf(LocalDate.now()) , "ductm");
         for(Attendance at : atts) {
             System.out.println(at.getStudent().getStudentID());
             System.out.println(at.getStudent().getStudentName());
